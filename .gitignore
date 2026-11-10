@@ -1,0 +1,25 @@
+# Build
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+
+# Secrets et réglages locaux
+.env
+.env.*
+.claude/settings.local.json
+
+# Filet de sécurité : fichiers de pilotage de la méthode projet-dossier (privés, hors Git)
+/CADRE.md
+/CONTEXTE.md
+/DOSSIER.md
+/JOURNAL.md
+/QUESTIONS.md
+/PIPELINE.md
+/pilotage/
