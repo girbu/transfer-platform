@@ -9,8 +9,6 @@ Permettre à un client de virer un montant d'un compte source vers un compte des
 
 Le virement traverse deux services qui ne partagent pas de base de données : la cohérence est donc **éventuelle** et garantie par une saga.
 
-	Deux systèmes de comptes, le compte courant et le livret, tenus par deux services distincts. C’est ce qui justifie la saga
-
 ## 2. Périmètre V1 (au plus tard le 16/11)
 
 | Dans le périmètre | Hors périmètre V1 (voir §9) |
