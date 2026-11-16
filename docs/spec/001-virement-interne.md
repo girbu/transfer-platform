@@ -9,7 +9,7 @@ Permettre à un client de virer un montant **entre son compte courant et son liv
 
 Les comptes courants et les livrets sont tenus par **deux services distincts**, chacun avec sa propre base : un virement modifie donc deux soldes qui ne peuvent pas être mis à jour dans une même transaction. La cohérence est **éventuelle** et garantie par une **saga** orchestrée par `payment-service`.
 
-## 2. Périmètre V1 (au plus tard le 16/11)
+## 2. Périmètre V1 (au plus tard le 22/11)
 
 | Dans le périmètre | Hors périmètre V1 (voir §9) |
 |---|---|
@@ -25,8 +25,8 @@ Les comptes courants et les livrets sont tenus par **deux services distincts**, 
 | Service | Responsabilité | Données propres |
 |---|---|---|
 | `payment-service` | Reçoit la demande, porte l'état du virement, **orchestre la saga** | `transfer`, `idempotency_key`, `outbox_message`, `inbox_message` |
-| `account-service` | Tient les **comptes courants** : débit, crédit, compensation | `account`, `account_movement`, `outbox_message`, `inbox_message` |
-| `savings-service` | Tient les **livrets** : débit, crédit, compensation | `savings_account`, `savings_movement`, `outbox_message`, `inbox_message` |
+| `account-service` | Tient les **comptes courants** : débit, crédit, compensation | `account`, `account_movement`, `outbox_message`, `inbox_message`, `processed_command`|
+| `savings-service` | Tient les **livrets** : débit, crédit, compensation | `savings_account`, `savings_movement`, `outbox_message`, `inbox_message`, `processed_command`  |
 
 Une instance PostgreSQL, **une base par service** (`payment_db`, `account_db`, `savings_db`). Aucun service ne lit la base d'un autre.
 

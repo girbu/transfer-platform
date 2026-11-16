@@ -32,10 +32,4 @@ Objectif : au moins 5 cas concrets, dont au moins une erreur de l'agent repéré
 - Mon intervention : vérifié que la spec est inchangée ; confirmé le trou par lecture de settings.json (matcher Read|Edit|Write|MultiEdit)
 - Leçon : mon autorisation dans le chat ne lève pas un garde-fou déterministe, c'est voulu. Limite connue : une écriture via Bash échappe au hook ; c'est mon accord, demandé par Claude Code, qui reste alors la barrière
 - Commit(s) : —
-### 2026-11-16 — harness — hook de protection de la spec déclenché
-- Type : hook déclenché
-- Demande : autorisation volontaire d'appliquer le patch R2 avec l'outil Edit (test)
-- Ce que l'agent a fait : a tenté l'Edit ; protect-files.sh l'a bloqué (PreToolUse, code 2) ; l'agent n'a pas cherché de contournement et a signalé que Bash n'est pas couvert
-- Mon intervention : vérifié que la spec est inchangée ; confirmé le trou par lecture de settings.json (matcher Read|Edit|Write|MultiEdit)
-- Leçon : mon autorisation dans le chat ne lève pas un garde-fou déterministe, c'est voulu. Limite connue : une écriture via Bash échappe au hook ; c'est mon accord, demandé par Claude Code, qui reste alors la barrière
-- Commit(s) : —
+
