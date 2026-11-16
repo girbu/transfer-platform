@@ -1,6 +1,6 @@
 # AGENTS.md — règles pour les agents de code
 
-Plateforme de virement interne en microservices event-driven (Java 21, Spring Boot 3.5, Kafka, PostgreSQL).
+Plateforme de virement interne en microservices event-driven (Java 25, Spring Boot 4.1, Kafka, PostgreSQL).
 Sources de vérité, à lire **avant toute tâche** :
 
 1. `docs/spec/001-virement-interne.md` — le besoin (validé, non modifiable par l'agent)
@@ -43,7 +43,7 @@ Sources de vérité, à lire **avant toute tâche** :
 
 ## Conventions de code
 
-- Java 21 : `record` pour les value objects et messages, `sealed` pour les hiérarchies d'événements, pattern matching `switch`.
+- Java 25 : `record` pour les value objects et messages, `sealed` pour les hiérarchies d'événements, pattern matching `switch`.
 - Montants : `BigDecimal` + value object `Money`, jamais `double`.
 - Injection par constructeur uniquement. Pas de Lombok.
 - Pas de `@Transactional` dans le domaine ; la transaction est posée dans `application` ou l'adaptateur.

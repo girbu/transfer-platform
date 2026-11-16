@@ -16,7 +16,7 @@ Produis un plan, sans écrire de code ni créer de fichier :
 2. Un découpage en 10 à 14 étapes d'environ 1 h, chacune testable et livrée en un seul commit.
    Pour chaque étape : objectif ; fichiers créés ou modifiés ; tests ajoutés (avec les scénarios S<n>
    concernés) ; critère de fin vérifiable par une commande.
-3. L'étape 1 est le squelette : parent Maven multi-module avec wrapper (Java 21, Spring Boot 3.5.x),
+3. L'étape 1 est le squelette : parent Maven multi-module avec wrapper (Java 25, Spring Boot 4.1.x — révisé le 16/11 : Spring Boot 3.5 n'a plus de support OSS depuis le 30/06/2026),
    Spotless, modules payment-service, account-service et savings-service vides (un module commun pour
    l'enveloppe des messages seulement si tu le justifies, avec son coût en couplage),
    docker-compose.yml (PostgreSQL 16 avec trois bases, Kafka KRaft à un broker), test ArchUnit des

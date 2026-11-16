@@ -126,7 +126,7 @@ Chaque scénario est un test d'intégration (Testcontainers : PostgreSQL + Kafka
 
 ## 8. Exigences non fonctionnelles
 
-- Java 21, Spring Boot 3.5.x, Maven multi-module avec wrapper.
+- Java 25, Spring Boot 4.1.x, Maven multi-module avec wrapper.
 - Architecture hexagonale vérifiée par **ArchUnit** : le package `domain` ne dépend ni de Spring, ni de Kafka, ni de JPA.
 - `docker compose up -d` démarre PostgreSQL (trois bases) et Kafka (KRaft, un seul broker) ; `./mvnw verify` passe sans autre prérequis que Docker.
 - Migrations de schéma par Flyway.
