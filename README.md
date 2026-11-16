@@ -32,4 +32,13 @@ client ──HTTP──▶ payment-service ──account.commands──▶ accou
 
 ## Démarrer
 
-<!-- Complété à l'étape 1 : prérequis, docker compose up -d, ./mvnw verify -->
+Prérequis : JDK 25, Docker. Maven est fourni par le wrapper (`./mvnw`).
+
+```bash
+./mvnw verify              # build, tests unitaires et d'intégration (Testcontainers), contrôle du formatage
+./mvnw spotless:apply      # formate le code Java
+docker compose up -d       # infrastructure locale : PostgreSQL 16 (payment_db, account_db, savings_db) et Kafka (KRaft)
+docker compose down -v     # arrête et supprime les données locales
+```
+
+`./mvnw verify` ne dépend pas de `docker compose` : les tests démarrent leurs propres conteneurs.
