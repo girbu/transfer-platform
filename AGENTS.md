@@ -4,7 +4,7 @@ Plateforme de virement interne en microservices event-driven (Java 21, Spring Bo
 Sources de vérité, à lire **avant toute tâche** :
 
 1. `docs/spec/001-virement-interne.md` — le besoin (validé, non modifiable par l'agent)
-2. `docs/adr/` — les décisions d'architecture
+2. `docs/adr/` — les décisions d'architecture (un ADR plus récent qui en amende un autre prévaut)
 3. ce fichier
 
 ## Méthode de travail (obligatoire)
@@ -54,7 +54,7 @@ Sources de vérité, à lire **avant toute tâche** :
 
 - Unitaires (`*Test`) : domaine et cas d'usage, sans Spring, sans mock du domaine.
 - Intégration (`*IT`, failsafe) : Testcontainers (PostgreSQL + Kafka), Awaitility pour la convergence asynchrone.
-- Chaque scénario S1 à S7 de la spec a son test d'intégration, nommé `S1_...`.
+- Chaque scénario du périmètre V1 (spec §7) a son test d'intégration, nommé `S<n>_...` (ex. `S1_...`).
 - Interdits : `@Disabled`, suppression ou affaiblissement d'une assertion pour faire passer un test, `Thread.sleep` dans les tests.
 
 ## Git

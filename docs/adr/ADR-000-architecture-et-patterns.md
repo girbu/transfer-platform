@@ -1,7 +1,7 @@
 # ADR-000 — Architecture et patterns de la plateforme de virement
 
-- Statut : **accepté** — 2026-11-10
-- Décideur : <TON_NOM>
+- Statut : **accepté** — 2026-11-10 — contexte et D3 amendés par [ADR-001](ADR-001-comptes-routage-unicite.md)
+- Décideur : GIRBU Ion
 - Contexte métier : [spec 001](../spec/001-virement-interne.md)
 
 ## Contexte

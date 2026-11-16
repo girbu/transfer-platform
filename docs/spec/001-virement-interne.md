@@ -105,7 +105,9 @@ Les messages sont produits par les services, jamais par le client.
 
 ## 7. Scénarios d'acceptation
 
-Chaque scénario est un test d'intégration (Testcontainers : PostgreSQL + Kafka) qui passe au vert. Notation : `C` = compte courant, `L` = livret ; plafond du livret = 22 950,00 €. « Mouvements » = mouvements liés au virement (hors `OPENING`).
+Chaque scénario est un test d'intégration (Testcontainers : PostgreSQL + Kafka) qui passe au vert.
+
+**Périmètre V1 (22/11) : S1, S3, S4, S6, S7, S8, S9, S10.** S2, S5, S11 et S12 sont reportés en V1.1. Notation : `C` = compte courant, `L` = livret ; plafond du livret = 22 950,00 €. « Mouvements » = mouvements liés au virement (hors `OPENING`).
 
 | # | Étant donné | Quand | Alors |
 |---|---|---|---|
