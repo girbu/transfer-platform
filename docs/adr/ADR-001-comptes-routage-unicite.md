@@ -1,0 +1,30 @@
+# ADR-001 — Deux systèmes de comptes, routage et garanties d'unicité
+
+- Statut : accepté — 2026-11-16
+- Décideur : GIRBU Ion 
+- Amende : [ADR-000](ADR-000-architecture-et-patterns.md) (contexte et D3)
+- Contexte métier : [spec 001 v1.1](../spec/001-virement-interne.md)
+
+## Contexte
+
+<!-- 3 à 5 lignes, avec tes mots : pourquoi l'ADR-000 ne tenait plus (où étaient les soldes, quelle conséquence sur la saga), et ce qu'a changé la spec v1.1. -->
+
+## Décisions
+
+| # | Décision | Contrainte qui la justifie | Coût accepté | Alternative écartée |
+|---|---|---|---|---|
+| D9 | `savings-service` distinct, avec sa base ; saga orchestrée entre compte courant et livret | Comptes courants et livrets sont tenus par des systèmes distincts, avec des règles propres (plafond R9) ; débit et crédit ne peuvent donc pas partager une transaction | Un service de plus ; cohérence éventuelle et compensation à gérer | Un seul service pour les deux types : transaction locale, mais modèle irréaliste et saga sans objet |
+| D10 | Routage : le client indique le type de chaque compte dans la requête | Chaque service ne connaît que ses comptes ; `payment-service` doit savoir à qui envoyer chaque commande sans appel synchrone (S8) | L'API expose le découpage interne ; un type erroné donne un refus (ou une compensation si c'est le destinataire) | Identifiant typé (préfixe) ; appel synchrone aux services (contraire à S8) ; table de routage alimentée par événements (inutile si le client connaît le type) |
+| D11 | Topics par service : `account.commands/events`, `savings.commands/events` | Chaque service ne reçoit que les commandes qui le concernent : un débit ne peut pas être exécuté par le mauvais service | Quatre topics au lieu de deux | Topics partagés filtrés par chaque consommateur : la garantie repose sur un filtre dans le code ; droits et rétention communs |
+| D12 | Débit par UPDATE conditionnel (`WHERE balance >= :montant`) | R4 sous concurrence : deux débits simultanés ne doivent pas créer d'argent (S10) | La règle vit dans la requête SQL, pas dans le domaine Java | Verrou optimiste (`@Version`) : réessai à gérer sur conflit ; verrou pessimiste : contention |
+| D13 | Contrainte d'unicité (`transfer_id`, `type`) sur les tables de mouvements | R7 : dernier rempart si l'inbox ne détecte pas un doublon (`messageId` régénéré par erreur, deux messages pour un même virement) | Un index par table ; la violation doit être traduite en « déjà traité », jamais en erreur 500 ou en réessai sans fin | Inbox seule : un bug sur le `messageId` suffirait à débiter deux fois |
+| D14 | `messageId` généré à l'insertion dans l'outbox et stocké dans la ligne | Un crash du publisher entre l'envoi et le marquage provoque une republication ; le doublon doit porter le même `messageId` pour que l'inbox le reconnaisse | Aucun coût notable (une colonne) | `messageId` généré à la publication : chaque republication paraît nouvelle et l'inbox devient aveugle |
+| D15 | Classement des échecs : passager → réessai ; métier → événement de refus ; message intraitable → journalisé (DLQ hors V1) | Chaque échec appelle une réponse différente : réessayer un message illisible bloque la partition, ignorer un refus métier laisse la saga sans réponse | Distinguer les types d'exception ; configurer le réessai (gestionnaire d'erreurs Spring Kafka) | Tout réessayer ; tout ignorer ; DLQ dès la V1 (outil de rejeu à prévoir) |
+| D16 | Un seul broker Kafka en V1 ; producteur idempotent | Démarrage rapide en local et en CI. Le producteur idempotent évite qu'un réessai d'envoi crée un doublon ou inverse l'ordre dans une partition | `acks=all` équivaut à `acks=1` ; un disque de broker perdu = messages perdus (en production : 3 brokers, réplication 3, `min.insync.replicas=2`) | 3 brokers en local : plus de ressources, démarrage plus lent, aucun changement de code (prévu comme exercice de panne en V2) |
+## Conséquences
+
+- `payment-service` route chaque commande vers `account.commands` ou `savings.commands` selon le type indiqué par le client.
+- Un consommateur ne doit jamais attraper une exception sans la classer : une exception avalée fait avancer l'offset et perd le message.
+- Un test publie deux fois la même ligne d'outbox et vérifie qu'un seul mouvement est créé (D13, D14).
+- Le scénario S10 (débits concurrents) vérifie D12 : le solde n'est jamais négatif et reste égal à la somme des mouvements.
+- Les compensations (R10) sont réessayées sans limite en V1 ; le délai d'expiration et `COMPENSATION_FAILED` viendront en V2.
